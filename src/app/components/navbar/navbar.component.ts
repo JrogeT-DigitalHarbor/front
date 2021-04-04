@@ -20,6 +20,7 @@ export class NavbarComponent {
   // tslint:disable-next-line:use-lifecycle-interface
   ngDoCheck(): void {
     this.username = Utils.get('username');
+    this.logged = this.username !== '';
   }
 
   goToHome(): void {
@@ -30,4 +31,8 @@ export class NavbarComponent {
     this.router.navigate(['login']);
   }
 
+  closeSession(): void {
+    Utils.deleteAll();
+    this.router.navigate(['login']);
+  }
 }

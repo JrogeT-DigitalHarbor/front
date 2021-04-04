@@ -31,7 +31,7 @@ export class RequestService {
     this.setHeaders();
     return this.http.post(
       this.url + prefixUrl,
-      {data: params, url: this.baseUrl},
+      params,
       {headers: this.headers}
     );
   }

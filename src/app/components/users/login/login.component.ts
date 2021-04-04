@@ -25,19 +25,18 @@ export class LoginComponent {
   login(): void {
     this.userService.login(this.user).subscribe(
       (Response) => {
-        if (Response.access_token != null) {
+        Utils.log(Response);
+        if (Response.body === 1) {
+          this.errorCode = 1;
+        } else if (Response.body === 2) {
+          this.errorCode = 2;
+        } else {
           Utils.set('username', this.user.username);
-          Utils.set('id', this.user.id);
+          Utils.set('id', Response.body.id);
           this.router.navigate(['home']);
         }
       }, (Error) => {
-        if (Error === 'Error: BAD USR') {
-          this.errorCode = 1;
-        } else if (Error === 'Error: BAD PWD') {
-          this.errorCode = 2;
-        } else if (Error === 'Error: NOT PWD') {
-          this.errorCode = 3;
-        }
+        alert('Error');
       }
     );
   }

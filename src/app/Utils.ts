@@ -17,11 +17,7 @@ export class Utils {
         return '';
       }
       const decrypt = this.decryptData(item);
-      if (item !== decrypt) {
-        return decrypt;
-      }
-      this.deleteAll();
-      throw new Error('Data changed');
+      return decrypt;
     } else {
       Utils.log('Utils:undefined');
       return '';

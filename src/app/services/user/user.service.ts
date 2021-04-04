@@ -31,10 +31,10 @@ export class UserService {
   }
 
   login(user: User): Observable<any> {
-    return this.requestService.post('login', user);
+    return this.requestService.post('users/login', user);
   }
 
   logout(): Observable<any> {
-    return this.requestService.get('logout');
+    return this.requestService.get('users/logout');
   }
 }
