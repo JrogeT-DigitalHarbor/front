@@ -16,7 +16,7 @@ export class NoAuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     if (Utils.get('username') !== '') {
-      this.router.navigate(['home']);
+      this.router.navigate(['home/hospitals']);
       return false;
     }
     return true;

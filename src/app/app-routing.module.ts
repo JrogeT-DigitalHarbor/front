@@ -1,18 +1,18 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {HomeComponent} from './components/home/home.component';
-import {AuthGuard} from './auth-guard.service';
-import {LoginComponent} from './components/users/login/login.component';
-import {NoAuthGuard} from "./no-auth.guard";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { HomeComponent } from './components/home/home.component';
+import { AuthGuard } from './auth-guard.service';
+import { LoginComponent } from './components/users/login/login.component';
+import { NoAuthGuard } from "./no-auth.guard";
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'home/hospitals',
     pathMatch: 'full',
   },
   {
-    path: 'home',
+    path: 'home/:sectionName',
     component: HomeComponent,
     canActivate: [AuthGuard]
   },

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../../models/user.model';
 import {Router} from '@angular/router';
-import {UserService} from '../../../services/user/user.service';
+import {UserService} from '../../../services/users/user.service';
 import {Utils} from '../../../Utils';
 
 @Component({
@@ -33,7 +33,7 @@ export class LoginComponent {
         } else {
           Utils.set('username', this.user.username);
           Utils.set('id', Response.body.id);
-          this.router.navigate(['home']);
+          this.router.navigate(['home/hospitals']);
         }
       }, (Error) => {
         alert('Error');

@@ -1,4 +1,4 @@
-import {environment} from 'src/environments/environment';
+import { environment } from 'src/environments/environment';
 
 export class Utils {
 
@@ -52,5 +52,10 @@ export class Utils {
     if (!environment.production) {
       console.log(printable);
     }
+  }
+
+  public static getSectionNumber(sectionName: string): number {
+    const sections: Array<string> = ['hospitals', 'doctors', 'patients', 'specialties'];
+    return sections.indexOf(sectionName);
   }
 }

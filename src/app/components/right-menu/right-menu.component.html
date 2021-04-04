@@ -1,0 +1,30 @@
+<div class="container-fluid">
+    <div *ngIf="active!='0'" class="row bg-light my-5">
+        <a class="list-group-item-action text-dark text-center py-3" href="/home/hospitals">
+            <div class="col h5">
+                Hospitals
+            </div>
+        </a>
+    </div>
+    <div *ngIf="active!='1'" class="row bg-light my-5">
+        <a class="list-group-item-action text-dark text-center py-3" href="/home/doctors">
+            <div class="col h5">
+                Doctors
+            </div>
+        </a>
+    </div>
+    <div *ngIf="active!='2'" class="row bg-light my-5">
+        <a class="list-group-item-action text-dark text-center py-3" href="/home/patients">
+            <div class="col h5">
+                Patients
+            </div>
+        </a>
+    </div>
+    <div *ngIf="active!='3'" class="row bg-light my-5">
+        <a class="list-group-item-action text-dark text-center py-3" href="/home/specialties">
+            <div class="col h5">
+                Specialties
+            </div>
+        </a>
+    </div>
+</div>

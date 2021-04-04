@@ -24,7 +24,7 @@ export class NavbarComponent {
   }
 
   goToHome(): void {
-    this.router.navigate(['home']);
+    this.router.navigate(['home/hospitals']);
   }
 
   goToLogin(): void {

@@ -1,0 +1,14 @@
+<container-element [ngSwitch]="active">
+    <div *ngSwitchCase="0">
+        <app-hospitals-index></app-hospitals-index>
+    </div>
+    <div *ngSwitchCase="1">
+        <app-doctors-index></app-doctors-index>
+    </div>
+    <div *ngSwitchCase="2">
+        <app-patients-index></app-patients-index>
+    </div>
+    <div *ngSwitchCase="3">
+        <app-specialties-index></app-specialties-index>
+    </div>
+</container-element>
