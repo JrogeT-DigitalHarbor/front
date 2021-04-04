@@ -29,7 +29,7 @@ import { SpecialtiesIndexComponent } from './components/specialties/specialties-
     SpecialtiesIndexComponent
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     FormsModule,
     HttpClientModule
