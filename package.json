@@ -8,11 +8,13 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "start:heroku": "node dist/server",
+    "start:heroku": "node dist/test-front/server",
     "postinstall": "npm run build:ssr",
+    "compile:server": "webpack --config webpack.server.config.js --progress --colors",
+    "serve:ssr": "node dist/test-front/server",
+    "build:ssr": "npm run build:client-and-server-bundles && npm run compile:server",
+    "build:client-and-server-bundles": "ng build --prod && ng run almacen-uagrm:server:production --bundleDependencies all",
     "dev:ssr": "ng run test-front:serve-ssr",
-    "serve:ssr": "node dist/test-front/server/main.js",
-    "build:ssr": "ng build --prod && ng run test-front:server:production",
     "prerender": "ng run test-front:prerender"
   },
   "engines": {
