@@ -7,11 +7,11 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" (click)="goToHome()">Inicio</a>
+        <a class="nav-link" href="/home/hospitals">Inicio</a>
       </li>
 
       <li class="nav-item">
-        <a *ngIf="!logged" (click)="goToLogin()" class="nav-link">Log in</a>
+        <a *ngIf="!logged" href="/login" class="nav-link">Log in</a>
       </li>
       <li class="nav-item">
         <a *ngIf="logged" (click)="closeSession()" class="nav-link">Log out</a>

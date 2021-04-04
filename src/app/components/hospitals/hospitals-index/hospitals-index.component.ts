@@ -16,8 +16,8 @@ export class HospitalsIndexComponent implements OnInit {
 
   constructor(private hospitalService: HospitalService) {
     this.hospitals = [];
-    this.newHospital = new Hospital('', '', []);
-    this.hospitalToEdit = new Hospital('', '', []);
+    this.newHospital = new Hospital('', '');
+    this.hospitalToEdit = new Hospital('', '');
   }
 
   ngOnInit(): void {
@@ -39,7 +39,7 @@ export class HospitalsIndexComponent implements OnInit {
   create() {
     this.hospitalService.create(this.newHospital).subscribe(
       (Response) => {
-        this.newHospital = new Hospital('', '', []);
+        this.newHospital = new Hospital('', '');
         this.getHospitals();
         alert(Response.message);
       }

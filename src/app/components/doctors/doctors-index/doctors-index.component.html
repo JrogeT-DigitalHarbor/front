@@ -2,8 +2,8 @@
     <thead class="table-dark">
         <tr>
             <th scope="col">
-                <button type="button" class="btn btn-outline-success border-light text-white" data-bs-toggle="modal"
-                    data-bs-target="#createModal">
+                <button type="button" class="btn btn-sm btn-outline-success border-light text-white"
+                    data-bs-toggle="modal" data-bs-target="#createModal">
                     Create
                 </button>
             </th>
@@ -13,6 +13,7 @@
             <th scope="col">Address</th>
             <th scope="col">Profile picture</th>
             <th scope="col">Specialties</th>
+            <th scope="col">Hospital</th>
             <th scope="col">Edit</th>
             <th scope="col">Delete</th>
         </tr>
@@ -46,13 +47,16 @@
                 </div>
             </td>
             <td>
-                <button type="button" class="btn btn-outline-warning border-dark text-dark" data-bs-toggle="modal"
-                    data-bs-target="#editModal" (click)="edit(i)">
+                {{getHospitalName(doctor.hospitalId)}}
+            </td>
+            <td>
+                <button type="button" class="btn btn-sm btn-outline-warning border-dark text-dark"
+                    data-bs-toggle="modal" data-bs-target="#editModal" (click)="edit(i)">
                     Edit
                 </button>
             </td>
             <td>
-                <button class="btn btn-outline-danger border-dark text-dark" (click)="delete(doctor.id)">
+                <button class="btn btn-sm btn-outline-danger border-dark text-dark" (click)="delete(doctor.id)">
                     Delete
                 </button>
             </td>
@@ -77,13 +81,13 @@
                     <label class="form-label">
                         Name
                     </label>
-                    <input [(ngModel)]="newDoctor.name" type="email" class="form-control">
+                    <input [(ngModel)]="newDoctor.name" type="text" class="form-control">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">
                         Lastname
                     </label>
-                    <input [(ngModel)]="newDoctor.lastname" type="email" class="form-control">
+                    <input [(ngModel)]="newDoctor.lastname" type="text" class="form-control">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">
@@ -108,12 +112,12 @@
                         Specialties
                     </label>
                     <select [(ngModel)]="selectedSpecialty.id" class="form-select">
-                        <option disabled>Open this select menu</option>
+                        <option disabled>Select an specialty</option>
                         <option *ngFor="let specialty of specialties" [ngValue]="specialty.id">
                             {{specialty.name}}
                         </option>
                     </select>
-                    <button class="btn btn-outline-dark mt-2" (click)="addSpecialtyToNewDoctor()">
+                    <button class="btn btn-sm btn-outline-dark mt-2" (click)="addSpecialtyToNewDoctor()">
                         Add specialty
                     </button>
                     <div class="col-3">
@@ -122,6 +126,17 @@
                             {{ getSpecialtyName(specialtyId) }}
                         </label>
                     </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">
+                        Hospital
+                    </label>
+                    <select [(ngModel)]="newDoctor.hospitalId" class="form-select">
+                        <option disabled>Select an hospital</option>
+                        <option *ngFor="let hospital of hospitals" [ngValue]="hospital.id">
+                            {{hospital.name}}
+                        </option>
+                    </select>
                 </div>
             </div>
             <div class="modal-footer">
@@ -154,13 +169,13 @@
                     <label class="form-label">
                         Name
                     </label>
-                    <input [(ngModel)]="doctorToEdit.name" type="email" class="form-control">
+                    <input [(ngModel)]="doctorToEdit.name" type="text" class="form-control">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">
                         Lastname
                     </label>
-                    <input [(ngModel)]="doctorToEdit.lastname" type="email" class="form-control">
+                    <input [(ngModel)]="doctorToEdit.lastname" type="text" class="form-control">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">
@@ -190,7 +205,7 @@
                             {{ specialty.name}}
                         </option>
                     </select>
-                    <button class="btn btn-outline-dark mt-2" (click)="addSpecialtyToDoctorToEdit()">
+                    <button class="btn btn-sm btn-outline-dark mt-2" (click)="addSpecialtyToDoctorToEdit()">
                         Add specialty
                     </button>
                     <div class="col-3">
@@ -199,6 +214,17 @@
                             {{ getSpecialtyName(specialtyId) }}
                         </label>
                     </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">
+                        Hospital
+                    </label>
+                    <select [(ngModel)]="doctorToEdit.hospitalId" class="form-select">
+                        <option disabled>Select an hospital</option>
+                        <option *ngFor="let hospital of hospitals" [ngValue]="hospital.id">
+                            {{hospital.name}}
+                        </option>
+                    </select>
                 </div>
             </div>
             <div class="modal-footer">

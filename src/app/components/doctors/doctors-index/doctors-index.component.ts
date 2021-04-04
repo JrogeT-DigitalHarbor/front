@@ -1,8 +1,10 @@
 import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { Doctor } from 'src/app/models/doctor.model';
+import { Hospital } from 'src/app/models/hospital.model';
 import { Specialty } from 'src/app/models/specialty.model';
 import { DoctorService } from 'src/app/services/doctors/doctor.service';
+import { HospitalService } from 'src/app/services/hospitals/hospital.service';
 import { SpecialtyService } from 'src/app/services/specialties/specialty.service';
 import { Utils } from 'src/app/Utils';
 
@@ -18,18 +20,25 @@ export class DoctorsIndexComponent {
   public doctorToEdit: Doctor;
   public specialties: Array<Specialty>;
   public selectedSpecialty: Specialty;
+  public hospitals: Array<Hospital>
 
-  constructor(private doctorService: DoctorService, private specialtyService: SpecialtyService) {
+  constructor(
+    private doctorService: DoctorService,
+    private specialtyService: SpecialtyService,
+    private hospitalService: HospitalService,
+  ) {
     this.doctors = [];
-    this.newDoctor = new Doctor('', '', '', '', '', '', []);
-    this.doctorToEdit = new Doctor('', '', '', '', '', '', []);
+    this.newDoctor = new Doctor('', '', '', '', '', '', [], '');
+    this.doctorToEdit = new Doctor('', '', '', '', '', '', [], '');
     this.specialties = [];
     this.selectedSpecialty = new Specialty('', '', '', '');
+    this.hospitals = [];
   }
 
   ngOnInit(): void {
     this.getDoctors();
     this.getSpecialties();
+    this.getHospitals();
   }
 
   getDoctors(): void {
@@ -56,6 +65,18 @@ export class DoctorsIndexComponent {
     );
   }
 
+  getHospitals(): void {
+    this.hospitalService.readAll().subscribe(
+      (Response) => {
+        Utils.log(Response);
+        this.hospitals = Response.body;
+      },
+      (Error) => {
+        alert(Error.message);
+      }
+    );
+  }
+
   create() {
     let y: string = this.newDoctor.dateOfBirth.toString();
     y += ':00.000Z';
@@ -63,7 +84,7 @@ export class DoctorsIndexComponent {
     Utils.log(this.newDoctor);
     this.doctorService.create(this.newDoctor).subscribe(
       (Response) => {
-        this.newDoctor = new Doctor('', '', '', '', '', '', []);
+        this.newDoctor = new Doctor('', '', '', '', '', '', [], '');
         this.getDoctors();
         alert(Response.message);
       }
@@ -96,8 +117,7 @@ export class DoctorsIndexComponent {
 
   update() {
     let y: string = this.doctorToEdit.dateOfBirth.toString();
-    // y += '.500+0000';
-    if (!y.indexOf('Z')) {
+    if (y.indexOf('Z') == -1) {
       y += ':00.000Z';
     }
     this.doctorToEdit.dateOfBirth = y;
@@ -125,6 +145,16 @@ export class DoctorsIndexComponent {
     this.specialties.forEach((specialty: Specialty) => {
       if (specialty.id === specialtyId) {
         name = specialty.name;
+      }
+    });
+    return name;
+  }
+
+  getHospitalName(hospitalId: string) {
+    let name = 'unknowed';
+    this.hospitals.forEach((hospital: Hospital) => {
+      if (hospital.id === hospitalId) {
+        name = hospital.name;
       }
     });
     return name;

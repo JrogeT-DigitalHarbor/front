@@ -8,6 +8,7 @@ export class Doctor {
         public dateOfBirth: string,
         public address: string,
         public profilePicture: string,
-        public specialtiesIds: Array<string>
+        public specialtiesIds: Array<string>,
+        public hospitalId: string
     ) { }
 }
