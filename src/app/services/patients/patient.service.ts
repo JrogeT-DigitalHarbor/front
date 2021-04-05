@@ -37,7 +37,6 @@ export class PatientService {
       userId: Utils.get('id'),
       body: patient
     }
-    Utils.log(data);
     return this.requestService.put('patients/' + patientId, data);
   }
 
@@ -46,7 +45,6 @@ export class PatientService {
       userId: Utils.get('id'),
       body: appointment
     }
-    Utils.log(data);
     return this.requestService.post('patients/' + patientId + '/appointments', data);
   }
 
@@ -56,6 +54,10 @@ export class PatientService {
 
   searchByName(name: string): Observable<any> {
     return this.requestService.post('patients/search/name', { word: name });
+  }
+
+  searchByLastname(lastname: string): Observable<any> {
+    return this.requestService.post('patients/search/lastname', { word: lastname });
   }
 
   searchByDate(dateA: string, dateB: string): Observable<any> {

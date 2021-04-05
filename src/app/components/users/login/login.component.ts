@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {User} from '../../../models/user.model';
-import {Router} from '@angular/router';
-import {UserService} from '../../../services/users/user.service';
-import {Utils} from '../../../Utils';
+import { Component, OnInit } from '@angular/core';
+import { User } from '../../../models/user.model';
+import { Router } from '@angular/router';
+import { UserService } from '../../../services/users/user.service';
+import { Utils } from '../../../Utils';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +25,6 @@ export class LoginComponent {
   login(): void {
     this.userService.login(this.user).subscribe(
       (Response) => {
-        Utils.log(Response);
         if (Response.body === 1) {
           this.errorCode = 1;
         } else if (Response.body === 2) {

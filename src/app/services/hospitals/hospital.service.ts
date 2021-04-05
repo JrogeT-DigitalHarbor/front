@@ -36,7 +36,6 @@ export class HospitalService {
       userId: Utils.get('id'),
       body: hospital
     }
-    Utils.log(data);
     return this.requestService.put('hospitals/' + hospitalId, data);
   }
 

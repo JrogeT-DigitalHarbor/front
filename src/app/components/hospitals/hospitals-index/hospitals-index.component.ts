@@ -33,11 +33,9 @@ export class HospitalsIndexComponent implements OnInit {
   getHospitals(): void {
     this.hospitalService.readAll().subscribe(
       (Response) => {
-        Utils.log(Response);
         this.hospitals = Response.body;
       },
       (Error) => {
-        Utils.log(Error);
       }
     );
   }

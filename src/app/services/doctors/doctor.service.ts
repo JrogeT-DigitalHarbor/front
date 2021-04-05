@@ -36,7 +36,6 @@ export class DoctorService {
       userId: Utils.get('id'),
       body: doctor
     }
-    Utils.log(data);
     return this.requestService.put('doctors/' + doctorId, data);
   }
 
@@ -46,6 +45,10 @@ export class DoctorService {
 
   searchByName(name: string): Observable<any> {
     return this.requestService.post('doctors/search/name', { word: name });
+  }
+  
+  searchByLastname(lastname: string): Observable<any> {
+    return this.requestService.post('doctors/search/lastname', { word: lastname });
   }
 
   searchByDate(dateA: string, dateB: string): Observable<any> {

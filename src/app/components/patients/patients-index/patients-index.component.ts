@@ -19,7 +19,8 @@ export class PatientsIndexComponent {
   public doctors: Array<Doctor>;
   public selectedoctor: Doctor;
   public newAppointment: Appointment;
-  public hospitalName: string;
+  public patientName: string;
+  public patientLastname: string;
   public dateA: string;
   public dateB: string;
 
@@ -31,9 +32,10 @@ export class PatientsIndexComponent {
     this.newPatient = new Patient('', '', '', '', '', '', []);
     this.patientToEdit = new Patient('', '', '', '', '', '', []);
     this.doctors = [];
-    this.selectedoctor = new Doctor('', '', '', '', '', '', [], '');
+    this.selectedoctor = new Doctor('', '', '', '', '', '', [], '', []);
     this.newAppointment = new Appointment('', '', '');
-    this.hospitalName = '';
+    this.patientName = '';
+    this.patientLastname = '';
     this.dateA = '';
     this.dateB = '';
   }
@@ -46,7 +48,7 @@ export class PatientsIndexComponent {
   getPatients(): void {
     this.patientService.readAll().subscribe(
       (Response) => {
-        Utils.log(Response);
+
         this.patients = Response.body;
       },
       (Error) => {
@@ -58,7 +60,7 @@ export class PatientsIndexComponent {
   getDoctors(): void {
     this.doctorService.readAll().subscribe(
       (Response) => {
-        Utils.log(Response);
+
         this.doctors = Response.body;
       },
       (Error) => {
@@ -71,7 +73,6 @@ export class PatientsIndexComponent {
     let y: string = this.newPatient.dateOfBirth.toString();
     y += ':00.000Z';
     this.newPatient.dateOfBirth = y;
-    Utils.log(this.newPatient);
     this.patientService.create(this.newPatient).subscribe(
       (Response) => {
         this.newPatient = new Patient('', '', '', '', '', '', []);
@@ -133,14 +134,25 @@ export class PatientsIndexComponent {
   }
 
   searchByName(): void {
-    if (this.hospitalName.length > 0) {
-      this.patientService.searchByName(this.hospitalName).subscribe(
+    if (this.patientName.length > 0) {
+      this.patientService.searchByName(this.patientName).subscribe(
         (Response) => {
           this.patients = Response.body;
         }
       );
     }
   }
+
+  searchByLastname(): void {
+    if (this.patientLastname.length > 0) {
+      this.patientService.searchByLastname(this.patientLastname).subscribe(
+        (Response) => {
+          this.patients = Response.body;
+        }
+      );
+    }
+  }
+
   searchByDate(): void {
     if (this.dateA.length > 0 && this.dateB.length > 0) {
       this.patientService.searchByDate(this.dateA + ':00.000Z', this.dateB + ':00.000Z').subscribe(

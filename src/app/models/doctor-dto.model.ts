@@ -1,6 +1,6 @@
-import { Appointment } from "./appointment.model";
+import { AppointmentDTO } from "./appointment-dto.model";
 
-export class Doctor {
+export class DoctorDTO {
     constructor(
         public id: string,
         public name: string,
@@ -10,6 +10,6 @@ export class Doctor {
         public profilePicture: string,
         public specialtiesIds: Array<string>,
         public hospitalId: string,
-        public appointments: Array<Appointment>
+        public appointments: Array<AppointmentDTO>
     ) { }
 }

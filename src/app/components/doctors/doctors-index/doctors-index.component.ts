@@ -1,5 +1,5 @@
-import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { DoctorDTO } from 'src/app/models/doctor-dto.model';
 import { Doctor } from 'src/app/models/doctor.model';
 import { Hospital } from 'src/app/models/hospital.model';
 import { Specialty } from 'src/app/models/specialty.model';
@@ -15,13 +15,14 @@ import { Utils } from 'src/app/Utils';
 })
 export class DoctorsIndexComponent {
 
-  public doctors: Array<Doctor>;
+  public doctors: Array<DoctorDTO>;
   public newDoctor: Doctor;
   public doctorToEdit: Doctor;
   public specialties: Array<Specialty>;
   public selectedSpecialty: Specialty;
   public hospitals: Array<Hospital>;
-  public hospitalName: string;
+  public doctorName: string;
+  public doctorLastname: string;
   public dateA: string;
   public dateB: string;
 
@@ -31,12 +32,13 @@ export class DoctorsIndexComponent {
     private hospitalService: HospitalService,
   ) {
     this.doctors = [];
-    this.newDoctor = new Doctor('', '', '', '', '', '', [], '');
-    this.doctorToEdit = new Doctor('', '', '', '', '', '', [], '');
+    this.newDoctor = new Doctor('', '', '', '', '', '', [], '', []);
+    this.doctorToEdit = new Doctor('', '', '', '', '', '', [], '', []);
     this.specialties = [];
     this.selectedSpecialty = new Specialty('', '', '', '');
     this.hospitals = [];
-    this.hospitalName = '';
+    this.doctorName = '';
+    this.doctorLastname = '';
     this.dateA = '';
     this.dateB = '';
   }
@@ -50,7 +52,7 @@ export class DoctorsIndexComponent {
   getDoctors(): void {
     this.doctorService.readAll().subscribe(
       (Response) => {
-        Utils.log(Response);
+
         this.doctors = Response.body;
       },
       (Error) => {
@@ -62,7 +64,7 @@ export class DoctorsIndexComponent {
   getSpecialties(): void {
     this.specialtyService.readAll().subscribe(
       (Response) => {
-        Utils.log(Response);
+
         this.specialties = Response.body;
       },
       (Error) => {
@@ -74,7 +76,7 @@ export class DoctorsIndexComponent {
   getHospitals(): void {
     this.hospitalService.readAll().subscribe(
       (Response) => {
-        Utils.log(Response);
+
         this.hospitals = Response.body;
       },
       (Error) => {
@@ -87,10 +89,9 @@ export class DoctorsIndexComponent {
     let y: string = this.newDoctor.dateOfBirth.toString();
     y += ':00.000Z';
     this.newDoctor.dateOfBirth = y;
-    Utils.log(this.newDoctor);
     this.doctorService.create(this.newDoctor).subscribe(
       (Response) => {
-        this.newDoctor = new Doctor('', '', '', '', '', '', [], '');
+        this.newDoctor = new Doctor('', '', '', '', '', '', [], '', []);
         this.getDoctors();
         alert(Response.message);
       }
@@ -98,7 +99,6 @@ export class DoctorsIndexComponent {
   }
 
   addSpecialtyToNewDoctor() {
-    Utils.log(this.selectedSpecialty.id);
     if (
       this.newDoctor.specialtiesIds.indexOf(this.selectedSpecialty.id) == -1
       && this.selectedSpecialty.id !== ''
@@ -108,7 +108,6 @@ export class DoctorsIndexComponent {
   }
 
   addSpecialtyToDoctorToEdit() {
-    Utils.log(this.selectedSpecialty.id);
     if (
       this.doctorToEdit.specialtiesIds.indexOf(this.selectedSpecialty.id) == -1
       && this.selectedSpecialty.id !== ''
@@ -167,14 +166,25 @@ export class DoctorsIndexComponent {
   }
 
   searchByName(): void {
-    if (this.hospitalName.length > 0) {
-      this.doctorService.searchByName(this.hospitalName).subscribe(
+    if (this.doctorName.length > 0) {
+      this.doctorService.searchByName(this.doctorName).subscribe(
         (Response) => {
           this.doctors = Response.body;
         }
       );
     }
   }
+
+  searchByLastname(): void {
+    if (this.doctorLastname.length > 0) {
+      this.doctorService.searchByLastname(this.doctorLastname).subscribe(
+        (Response) => {
+          this.doctors = Response.body;
+        }
+      );
+    }
+  }
+
   searchByDate(): void {
     if (this.dateA.length > 0 && this.dateB.length > 0) {
       this.doctorService.searchByDate(this.dateA + ':00.000Z', this.dateB + ':00.000Z').subscribe(

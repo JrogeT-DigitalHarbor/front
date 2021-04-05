@@ -36,7 +36,6 @@ export class SpecialtyService {
       userId: Utils.get('id'),
       body: specialty
     }
-    Utils.log(data);
     return this.requestService.put('specialties/' + specialtyId, data);
   }
 

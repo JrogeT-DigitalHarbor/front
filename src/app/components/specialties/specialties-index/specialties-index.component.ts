@@ -27,11 +27,9 @@ export class SpecialtiesIndexComponent {
   getSpecialties(): void {
     this.specialtyService.readAll().subscribe(
       (Response) => {
-        Utils.log(Response);
         this.specialties = Response.body;
       },
       (Error) => {
-        Utils.log(Error);
       }
     );
   }

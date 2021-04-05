@@ -1,14 +1,14 @@
 <div class="row">
     <div class="col-5 mx-auto">
-        <div class="input-group mb-3">
-            <input [(ngModel)]="hospitalName" type="text" class="form-control" placeholder="name...">
+        <div class="input-group input-group-sm mb-3">
+            <input [(ngModel)]="doctorName" type="text" class="form-control" placeholder="name...">
             <button class="btn btn-outline-info" type="button" (click)="searchByName()">
                 Search by name
             </button>
         </div>
     </div>
     <div class="col mx-auto">
-        <div class="input-group mb-3">
+        <div class="input-group input-group-sm mb-3">
             <input [(ngModel)]="dateA" type="datetime-local" class="form-control">
             <input [(ngModel)]="dateB" type="datetime-local" class="form-control">
             <button class=" btn btn-outline-info" type="button" (click)="searchByDate()">
@@ -17,246 +17,291 @@
         </div>
     </div>
 </div>
-<table class="table table-secondary table-bordered border-dark table-sm">
-    <thead class="table-dark">
-        <tr>
-            <th scope="col">
-                <button class="btn btn-outline-success btn-sm" (click)="getDoctors()">
-                    Refresh
-                </button>
-                <button type="button" class="btn btn-sm btn-outline-success border-light text-white"
-                    data-bs-toggle="modal" data-bs-target="#createModal">
-                    Create
-                </button>
-            </th>
-            <th scope="col">Name</th>
-            <th scope="col">Lastname</th>
-            <th scope="col">Date of birth</th>
-            <th scope="col">Address</th>
-            <th scope="col">Profile picture</th>
-            <th scope="col">Specialties</th>
-            <th scope="col">Hospital</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let doctor of doctors; index as i">
-            <th scope="row">
-                {{i+1}}
-            </th>
-            <td>
-                {{doctor.name}}
-            </td>
-            <td>
-                {{doctor.lastname}}
-            </td>
-            <td>
-                {{doctor.dateOfBirth | date:'medium'}}
-            </td>
-            <td>
-                {{doctor.address}}
-            </td>
-            <td>
-                {{doctor.profilePicture}}
-            </td>
-            <td>
-                <div class="col-3">
-                    <label *ngFor="let specialtyId of doctor.specialtiesIds"
-                        class="badge rounded-pill bg-light text-dark border border-dark">
-                        {{ getSpecialtyName(specialtyId) }}
-                    </label>
-                </div>
-            </td>
-            <td>
-                {{getHospitalName(doctor.hospitalId)}}
-            </td>
-            <td>
-                <button type="button" class="btn btn-sm btn-outline-warning border-dark text-dark"
-                    data-bs-toggle="modal" data-bs-target="#editModal" (click)="edit(i)">
-                    Edit
-                </button>
-            </td>
-            <td>
-                <button class="btn btn-sm btn-outline-danger border-dark text-dark" (click)="delete(doctor.id)">
-                    Delete
-                </button>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-<!-- Create modal-->
-<div class="modal fade bg-dark" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    Create new Doctor
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label class="form-label">
-                        Name
-                    </label>
-                    <input [(ngModel)]="newDoctor.name" type="text" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">
-                        Lastname
-                    </label>
-                    <input [(ngModel)]="newDoctor.lastname" type="text" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">
-                        Date of birth
-                    </label>
-                    <input [(ngModel)]="newDoctor.dateOfBirth" type="datetime-local" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">
-                        Address
-                    </label>
-                    <input [(ngModel)]="newDoctor.address" type="text" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">
-                        Profile picture
-                    </label>
-                    <input [(ngModel)]="newDoctor.profilePicture" type="text" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">
-                        Specialties
-                    </label>
-                    <select [(ngModel)]="selectedSpecialty.id" class="form-select">
-                        <option disabled>Select an specialty</option>
-                        <option *ngFor="let specialty of specialties" [ngValue]="specialty.id">
-                            {{specialty.name}}
-                        </option>
-                    </select>
-                    <button class="btn btn-sm btn-outline-dark mt-2" (click)="addSpecialtyToNewDoctor()">
-                        Add specialty
-                    </button>
-                    <div class="col-3">
-                        <label *ngFor="let specialtyId of newDoctor.specialtiesIds"
-                            class="badge rounded-pill bg-light text-dark border border-dark">
-                            {{ getSpecialtyName(specialtyId) }}
-                        </label>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">
-                        Hospital
-                    </label>
-                    <select [(ngModel)]="newDoctor.hospitalId" class="form-select">
-                        <option disabled>Select an hospital</option>
-                        <option *ngFor="let hospital of hospitals" [ngValue]="hospital.id">
-                            {{hospital.name}}
-                        </option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-danger border-dark text-dark" data-bs-dismiss="modal">
-                    Cancel
-                </button>
-                <button type="button" (click)="create()" class="btn btn-outline-success border-dark text-dark"
-                    data-bs-dismiss="modal">
-                    Save
-                </button>
-            </div>
+<div class="row">
+    <div class="col-5">
+        <div class="input-group input-group-sm mb-3">
+            <input [(ngModel)]="doctorLastname" type="text" class="form-control" placeholder="lastname...">
+            <button class="btn btn-outline-info" type="button" (click)="searchByLastname()">
+                Search by lastname
+            </button>
         </div>
     </div>
 </div>
-
-<!-- Edit modal-->
-<div class="modal fade bg-dark" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    Edit Hospital
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label class="form-label">
-                        Name
-                    </label>
-                    <input [(ngModel)]="doctorToEdit.name" type="text" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">
-                        Lastname
-                    </label>
-                    <input [(ngModel)]="doctorToEdit.lastname" type="text" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">
-                        Date of birth
-                    </label>
-                    <input [(ngModel)]="doctorToEdit.dateOfBirth" type="datetime-local" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">
-                        Address
-                    </label>
-                    <input [(ngModel)]="doctorToEdit.address" type="text" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">
-                        Profile picture
-                    </label>
-                    <input [(ngModel)]="doctorToEdit.profilePicture" type="text" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">
-                        Specialties
-                    </label>
-                    <select [(ngModel)]="selectedSpecialty.id" class="form-select">
-                        <option disabled>Open this select menu</option>
-                        <option *ngFor="let specialty of specialties" [ngValue]="specialty.id">
-                            {{ specialty.name}}
-                        </option>
-                    </select>
-                    <button class="btn btn-sm btn-outline-dark mt-2" (click)="addSpecialtyToDoctorToEdit()">
-                        Add specialty
+<div class="table-wrapper-scroll-y my-custom-scrollbar">
+    <table class="table table-secondary table-bordered border-dark mb-0 table-sm">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">
+                    <button class="btn btn-outline-success btn-sm" (click)="getDoctors()">
+                        Refresh
                     </button>
-                    <div class="col-3">
-                        <label *ngFor="let specialtyId of doctorToEdit.specialtiesIds"
-                            class="badge rounded-pill bg-light text-dark border border-dark">
-                            {{ getSpecialtyName(specialtyId) }}
+                    <button type="button" class="btn btn-sm btn-outline-success border-light text-white"
+                        data-bs-toggle="modal" data-bs-target="#createModal">
+                        Create
+                    </button>
+                </th>
+                <th scope="col">Name</th>
+                <th scope="col">Lastname</th>
+                <th scope="col">Date of birth</th>
+                <th scope="col">Address</th>
+                <th scope="col">Profile picture</th>
+                <th scope="col">Specialties</th>
+                <th scope="col">Hospital</th>
+                <th scope="col">Appointments</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-template ngFor let-doctor [ngForOf]="doctors" let-i="index">
+                <tr>
+                    <th scope="row">
+                        {{i+1}}
+                    </th>
+                    <td>
+                        {{doctor.name}}
+                    </td>
+                    <td>
+                        {{doctor.lastname}}
+                    </td>
+                    <td>
+                        {{doctor.dateOfBirth | date:'medium'}}
+                    </td>
+                    <td>
+                        {{doctor.address}}
+                    </td>
+                    <td>
+                        {{doctor.profilePicture}}
+                    </td>
+                    <td>
+                        <div class="col-3">
+                            <label *ngFor="let specialtyId of doctor.specialtiesIds"
+                                class="badge rounded-pill bg-light text-dark border border-dark">
+                                {{ getSpecialtyName(specialtyId) }}
+                            </label>
+                        </div>
+                    </td>
+                    <td>
+                        {{getHospitalName(doctor.hospitalId)}}
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse"
+                            href="#appointment{{doctor.id}}" role="button" aria-expanded="false"
+                            aria-controls="collapseExample">
+                            View patients
+                        </a>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-outline-warning border-dark text-dark"
+                            data-bs-toggle="modal" data-bs-target="#editModal" (click)="edit(i)">
+                            Edit
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-danger border-dark text-dark" (click)="delete(doctor.id)">
+                            Delete
+                        </button>
+                    </td>
+                <tr class="collapse" id="appointment{{doctor.id}}">
+                    <td class="bg-white border-start border-bottom border-white">
+                    </td>
+                    <td colspan="7" class="border border-secondary">
+                        <ng-container *ngIf="doctor.appointments.length === 0">
+                            <h5 class="text-center">
+                                No patients
+                            </h5>
+                        </ng-container>
+                        <ng-template ngFor let-appointment [ngForOf]="doctor.appointments" let-i="index">
+                            <div class="container border-top border-dark border-3">
+                                <div class="row justify-content-end">
+                                    Date: {{appointment.date | date:'medium'}}
+                                </div>
+                                <div class="row">
+                                    {{appointment.description}}
+                                </div>
+                                <div class="row justify-content-end">
+                                    Patient: {{ appointment.patient.name }} {{ appointment.patient.lastname }}
+                                </div>
+                            </div>
+                        </ng-template>
+                    </td>
+                </tr>
+            </ng-template>
+        </tbody>
+    </table>
+
+    <!-- Create modal-->
+    <div class="modal fade bg-dark" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Create new Doctor
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Name
                         </label>
+                        <input [(ngModel)]="newDoctor.name" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Lastname
+                        </label>
+                        <input [(ngModel)]="newDoctor.lastname" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Date of birth
+                        </label>
+                        <input [(ngModel)]="newDoctor.dateOfBirth" type="datetime-local" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Address
+                        </label>
+                        <input [(ngModel)]="newDoctor.address" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Profile picture
+                        </label>
+                        <input [(ngModel)]="newDoctor.profilePicture" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Specialties
+                        </label>
+                        <select [(ngModel)]="selectedSpecialty.id" class="form-select">
+                            <option disabled>Select an specialty</option>
+                            <option *ngFor="let specialty of specialties" [ngValue]="specialty.id">
+                                {{specialty.name}}
+                            </option>
+                        </select>
+                        <button class="btn btn-sm btn-outline-dark mt-2" (click)="addSpecialtyToNewDoctor()">
+                            Add specialty
+                        </button>
+                        <div class="col-3">
+                            <label *ngFor="let specialtyId of newDoctor.specialtiesIds"
+                                class="badge rounded-pill bg-light text-dark border border-dark">
+                                {{ getSpecialtyName(specialtyId) }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Hospital
+                        </label>
+                        <select [(ngModel)]="newDoctor.hospitalId" class="form-select">
+                            <option disabled>Select an hospital</option>
+                            <option *ngFor="let hospital of hospitals" [ngValue]="hospital.id">
+                                {{hospital.name}}
+                            </option>
+                        </select>
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">
-                        Hospital
-                    </label>
-                    <select [(ngModel)]="doctorToEdit.hospitalId" class="form-select">
-                        <option disabled>Select an hospital</option>
-                        <option *ngFor="let hospital of hospitals" [ngValue]="hospital.id">
-                            {{hospital.name}}
-                        </option>
-                    </select>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger border-dark text-dark" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="button" (click)="create()" class="btn btn-outline-success border-dark text-dark"
+                        data-bs-dismiss="modal">
+                        Save
+                    </button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-danger border-dark text-dark" data-bs-dismiss="modal">
-                    Cancel
-                </button>
-                <button type="button" (click)="update()" class="btn btn-outline-success border-dark text-dark"
-                    data-bs-dismiss="modal">
-                    Save
-                </button>
+        </div>
+    </div>
+
+    <!-- Edit modal-->
+    <div class="modal fade bg-dark" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Edit Hospital
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Name
+                        </label>
+                        <input [(ngModel)]="doctorToEdit.name" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Lastname
+                        </label>
+                        <input [(ngModel)]="doctorToEdit.lastname" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Date of birth
+                        </label>
+                        <input [(ngModel)]="doctorToEdit.dateOfBirth" type="datetime-local" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Address
+                        </label>
+                        <input [(ngModel)]="doctorToEdit.address" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Profile picture
+                        </label>
+                        <input [(ngModel)]="doctorToEdit.profilePicture" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Specialties
+                        </label>
+                        <select [(ngModel)]="selectedSpecialty.id" class="form-select">
+                            <option disabled>Open this select menu</option>
+                            <option *ngFor="let specialty of specialties" [ngValue]="specialty.id">
+                                {{ specialty.name}}
+                            </option>
+                        </select>
+                        <button class="btn btn-sm btn-outline-dark mt-2" (click)="addSpecialtyToDoctorToEdit()">
+                            Add specialty
+                        </button>
+                        <div class="col-3">
+                            <label *ngFor="let specialtyId of doctorToEdit.specialtiesIds"
+                                class="badge rounded-pill bg-light text-dark border border-dark">
+                                {{ getSpecialtyName(specialtyId) }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Hospital
+                        </label>
+                        <select [(ngModel)]="doctorToEdit.hospitalId" class="form-select">
+                            <option disabled>Select an hospital</option>
+                            <option *ngFor="let hospital of hospitals" [ngValue]="hospital.id">
+                                {{hospital.name}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger border-dark text-dark" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="button" (click)="update()" class="btn btn-outline-success border-dark text-dark"
+                        data-bs-dismiss="modal">
+                        Save
+                    </button>
+                </div>
             </div>
         </div>
     </div>
