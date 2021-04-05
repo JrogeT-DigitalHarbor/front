@@ -1,21 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { Appointment } from 'src/app/models/appointment.model';
-import { Doctor } from 'src/app/models/doctor.model';
-import { Patient } from 'src/app/models/patient.model';
-import { DoctorService } from 'src/app/services/doctors/doctor.service';
-import { PatientService } from 'src/app/services/patients/patient.service';
-import { Utils } from 'src/app/Utils';
+import {HttpClient} from '@angular/common/http';
+import {Component, OnInit} from '@angular/core';
+import {Appointment} from 'src/app/models/appointment.model';
+import {Doctor} from 'src/app/models/doctor.model';
+import {Patient} from 'src/app/models/patient.model';
+import {DoctorService} from 'src/app/services/doctors/doctor.service';
+import {PatientService} from 'src/app/services/patients/patient.service';
+import {Utils} from 'src/app/Utils';
 
 @Component({
   selector: 'app-patients-index',
   templateUrl: './patients-index.component.html',
   styleUrls: ['./patients-index.component.css']
 })
-export class PatientsIndexComponent {
+export class PatientsIndexComponent implements OnInit {
 
   public patients: Array<Patient>;
   public newPatient: Patient;
-  public patientToEdit: Patient;
+  public patientToEdit!: Patient;
   public doctors: Array<Doctor>;
   public selectedoctor: Doctor;
   public newAppointment: Appointment;
@@ -23,21 +24,25 @@ export class PatientsIndexComponent {
   public patientLastname: string;
   public dateA: string;
   public dateB: string;
+  public fileToUpload: any;
+  private fileName: string;
 
   constructor(
     private patientService: PatientService,
-    private doctorService: DoctorService
+    private doctorService: DoctorService,
+    private http: HttpClient
   ) {
     this.patients = [];
-    this.newPatient = new Patient('', '', '', '', '', '', []);
-    this.patientToEdit = new Patient('', '', '', '', '', '', []);
+    this.newPatient = new Patient('', '', '', '', '', [], '');
+    this.patientToEdit = new Patient('', '', '', '', '', [], '');
     this.doctors = [];
-    this.selectedoctor = new Doctor('', '', '', '', '', '', [], '', []);
+    this.selectedoctor = new Doctor('', '', '', '', '', [], '', [], '');
     this.newAppointment = new Appointment('', '', '');
     this.patientName = '';
     this.patientLastname = '';
     this.dateA = '';
     this.dateB = '';
+    this.fileName = '';
   }
 
   ngOnInit(): void {
@@ -73,11 +78,14 @@ export class PatientsIndexComponent {
     let y: string = this.newPatient.dateOfBirth.toString();
     y += ':00.000Z';
     this.newPatient.dateOfBirth = y;
+    this.newPatient.profilePicture = 'id';
+    delete this.newPatient.id;
     this.patientService.create(this.newPatient).subscribe(
       (Response) => {
-        this.newPatient = new Patient('', '', '', '', '', '', []);
-        this.getPatients();
-        alert(Response.message);
+        Utils.log(Response);
+        this.newPatient = new Patient('', '', '', '', '', [], '');
+        this.fileName = Response.body.id;
+        this.uploadFile();
       }
     );
   }
@@ -86,7 +94,8 @@ export class PatientsIndexComponent {
     let y: string = this.newAppointment.date.toString();
     y += ':00.000Z';
     this.newAppointment.date = y;
-    this.patientService.createAppointment(this.patientToEdit.id, this.newAppointment).subscribe(
+    // tslint:disable-next-line:no-non-null-assertion
+    this.patientService.createAppointment(this.patientToEdit.id!, this.newAppointment).subscribe(
       (Response) => {
         this.getPatients();
         alert(Response.message);
@@ -98,15 +107,18 @@ export class PatientsIndexComponent {
     this.patientToEdit = this.patients[i];
   }
 
-  update() {
+  update(): void {
     let y: string = this.patientToEdit.dateOfBirth.toString();
-    if (y.indexOf('Z') == -1) {
+    if (y.indexOf('Z') === -1) {
       y += ':00.000Z';
     }
     this.patientToEdit.dateOfBirth = y;
-    this.patientService.update(this.patientToEdit.id, this.patientToEdit).subscribe(
+    // tslint:disable-next-line:no-non-null-assertion
+    this.fileName = this.patientToEdit.id!;
+    // tslint:disable-next-line:no-non-null-assertion
+    this.patientService.update(this.patientToEdit.id!, this.patientToEdit).subscribe(
       (Response) => {
-        this.getPatients();
+        this.uploadFile();
         alert(Response.message);
       },
       (Error) => {
@@ -123,7 +135,7 @@ export class PatientsIndexComponent {
     );
   }
 
-  getDoctorName(doctorId: string) {
+  getDoctorName(doctorId: string): string {
     let name = 'unknowed';
     this.doctors.forEach((doctor: Doctor) => {
       if (doctor.id === doctorId) {
@@ -160,6 +172,32 @@ export class PatientsIndexComponent {
           this.patients = Response.body;
         }
       );
+    }
+  }
+
+  onFileSelected(event: any): void {
+    this.fileToUpload = event.target.files[0];
+  }
+
+  uploadFile(): void {
+    if (this.fileToUpload) {
+      const formData = new FormData();
+      formData.append('file', this.fileToUpload);
+      this.http.post(
+        'http://localhost:8080/api/uploadFile/' + this.fileName,
+        formData
+      ).subscribe(
+        (Response: any) => {
+          Utils.log(Response);
+          this.fileToUpload = null;
+          this.getPatients();
+        },
+        (Error: any) => {
+          Utils.log(Error);
+        }
+      );
+    }else{
+      this.getPatients();
     }
   }
 

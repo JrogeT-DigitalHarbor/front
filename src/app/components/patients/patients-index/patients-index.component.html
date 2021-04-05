@@ -1,302 +1,304 @@
 <div class="row">
-    <div class="col-5 mx-auto">
-        <div class="input-group input-group-sm mb-3">
-            <input [(ngModel)]="patientName" type="text" class="form-control" placeholder="name...">
-            <button class="btn btn-outline-info" type="button" (click)="searchByName()">
-                Search by name
-            </button>
-        </div>
+  <div class="col-5 mx-auto">
+    <div class="input-group input-group-sm mb-3">
+      <input [(ngModel)]="patientName" type="text" class="form-control" placeholder="name...">
+      <button class="btn btn-outline-info" type="button" (click)="searchByName()">
+        Search by name
+      </button>
     </div>
-    <div class="col mx-auto">
-        <div class="input-group input-group-sm mb-3">
-            <input [(ngModel)]="dateA" type="datetime-local" class="form-control">
-            <input [(ngModel)]="dateB" type="datetime-local" class="form-control">
-            <button class=" btn btn-outline-info" type="button" (click)="searchByDate()">
-                Search by date
-            </button>
-        </div>
+  </div>
+  <div class="col mx-auto">
+    <div class="input-group input-group-sm mb-3">
+      <input [(ngModel)]="dateA" type="datetime-local" class="form-control">
+      <input [(ngModel)]="dateB" type="datetime-local" class="form-control">
+      <button class=" btn btn-outline-info" type="button" (click)="searchByDate()">
+        Search by date
+      </button>
     </div>
+  </div>
 </div>
 <div class="row">
-    <div class="col-5 mx-auto">
-        <div class="input-group input-group-sm mb-3">
-            <input [(ngModel)]="patientLastname" type="text" class="form-control" placeholder="lastname...">
-            <button class="btn btn-outline-info" type="button" (click)="searchByLastname()">
-                Search by lastname
-            </button>
-        </div>
+  <div class="col-5 mx-auto">
+    <div class="input-group input-group-sm mb-3">
+      <input [(ngModel)]="patientLastname" type="text" class="form-control" placeholder="lastname...">
+      <button class="btn btn-outline-info" type="button" (click)="searchByLastname()">
+        Search by lastname
+      </button>
     </div>
+  </div>
 </div>
 <div class="table-wrapper-scroll-y my-custom-scrollbar">
-    <table class="table table-secondary table-bordered border-dark mb-0 table-sm">
-        <thead class="table-dark">
-            <tr>
-                <th scope="col">
-                    <button class="btn btn-outline-success btn-sm" (click)="getPatients()">
-                        Refresh
-                    </button>
-                    <button type="button" class="btn btn-sm btn-outline-success border-light text-white"
-                        data-bs-toggle="modal" data-bs-target="#createModal">
-                        Create
-                    </button>
-                </th>
-                <th scope="col">Name</th>
-                <th scope="col">Lastname</th>
-                <th scope="col">Date of birth</th>
-                <th scope="col">Address</th>
-                <th scope="col">Profile picture</th>
-                <th scope="col">Appointments</th>
-                <th scope="col">Edit</th>
-                <th scope="col">Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            <ng-template ngFor let-patient [ngForOf]="patients" let-i="index">
-                <tr>
-                    <th scope="row">
-                        {{i+1}}
-                    </th>
-                    <td>
-                        {{patient.name}}
-                    </td>
-                    <td>
-                        {{patient.lastname}}
-                    </td>
-                    <td>
-                        {{patient.dateOfBirth | date:'medium'}}
-                    </td>
-                    <td>
-                        {{patient.address}}
-                    </td>
-                    <td>
-                        {{patient.profilePicture}}
-                    </td>
-                    <td>
-                        <a class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse"
-                            href="#appointments{{patient.id}}" role="button" aria-expanded="false"
-                            aria-controls="collapseExample">
-                            View appointments
-                        </a>
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-sm btn-outline-warning border-dark text-dark"
-                            data-bs-toggle="modal" data-bs-target="#editModal" (click)="edit(i)">
-                            Edit
-                        </button>
-                    </td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-danger border-dark text-dark"
-                            (click)="delete(patient.id)">
-                            Delete
-                        </button>
-                    </td>
-                </tr>
-                <tr class="collapse" id="appointments{{patient.id}}">
-                    <td class="bg-white border-start border-bottom border-white">
-                    </td>
-                    <td colspan="7" class="border border-secondary">
-                        <ng-container *ngIf="patient.appointments.length === 0">
-                            <h5 class="text-center">
-                                No appointments
-                            </h5>
-                        </ng-container>
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                <button type="button" class="btn btn-outline-success my-2" data-bs-toggle="modal"
-                                    data-bs-target="#addAppointmentModal" (click)="edit(i)">
-                                    New appointment
-                                </button>
-                            </div>
-                        </div>
-                        <ng-template ngFor let-appointment [ngForOf]="patient.appointments" let-i="index">
-                            <div class="container border-top border-dark border-3">
-                                <div class="row justify-content-end">
-                                    Date: {{appointment.date | date:'medium'}}
-                                </div>
-                                <div class="row">
-                                    {{appointment.description}}
-                                </div>
-                                <div class="row justify-content-end">
-                                    Doctor: {{getDoctorName(appointment.doctorId)}}
-                                </div>
-                            </div>
-                        </ng-template>
-                    </td>
-                </tr>
-            </ng-template>
-        </tbody>
-    </table>
-
-    <!-- Create modal-->
-    <div class="modal fade bg-dark" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        Create new Patient
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Name
-                        </label>
-                        <input [(ngModel)]="newPatient.name" type="text" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Lastname
-                        </label>
-                        <input [(ngModel)]="newPatient.lastname" type="text" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Date of birth
-                        </label>
-                        <input [(ngModel)]="newPatient.dateOfBirth" type="datetime-local" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Address
-                        </label>
-                        <input [(ngModel)]="newPatient.address" type="text" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Profile picture
-                        </label>
-                        <input [(ngModel)]="newPatient.profilePicture" type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger border-dark text-dark" data-bs-dismiss="modal">
-                        Cancel
-                    </button>
-                    <button type="button" (click)="create()" class="btn btn-outline-success border-dark text-dark"
-                        data-bs-dismiss="modal">
-                        Save
-                    </button>
-                </div>
+  <table class="table table-secondary table-bordered border-dark mb-0 table-sm">
+    <thead class="table-dark">
+    <tr>
+      <th scope="col">
+        <button class="btn btn-outline-success btn-sm" (click)="getPatients()">
+          Refresh
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-success border-light text-white"
+                data-bs-toggle="modal" data-bs-target="#createModal">
+          Create
+        </button>
+      </th>
+      <th scope="col">Name</th>
+      <th scope="col">Lastname</th>
+      <th scope="col">Date of birth</th>
+      <th scope="col">Address</th>
+      <th scope="col">Profile picture</th>
+      <th scope="col">Appointments</th>
+      <th scope="col">Edit</th>
+      <th scope="col">Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <ng-template ngFor let-patient [ngForOf]="patients" let-i="index">
+      <tr>
+        <th scope="row">
+          {{i + 1}}
+        </th>
+        <td>
+          {{patient.name}}
+        </td>
+        <td>
+          {{patient.lastname}}
+        </td>
+        <td>
+          {{patient.dateOfBirth | date:'medium'}}
+        </td>
+        <td>
+          {{patient.address}}
+        </td>
+        <td>
+          <img src="http://localhost:8080/api/downloadFile/{{patient.id}}.jpg"
+               width="90"
+               height="90"/>
+        </td>
+        <td>
+          <a class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse"
+             href="#appointments{{patient.id}}" role="button" aria-expanded="false"
+             aria-controls="collapseExample">
+            View appointments
+          </a>
+        </td>
+        <td>
+          <button type="button" class="btn btn-sm btn-outline-warning border-dark text-dark"
+                  data-bs-toggle="modal" data-bs-target="#editModal" (click)="edit(i)">
+            Edit
+          </button>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-outline-danger border-dark text-dark"
+                  (click)="delete(patient.id!)">
+            Delete
+          </button>
+        </td>
+      </tr>
+      <tr class="collapse" id="appointments{{patient.id}}">
+        <td class="bg-white border-start border-bottom border-white">
+        </td>
+        <td colspan="7" class="border border-secondary">
+          <ng-container *ngIf="patient.appointments.length === 0">
+            <h5 class="text-center">
+              No appointments
+            </h5>
+          </ng-container>
+          <div class="container">
+            <div class="row justify-content-center">
+              <button type="button" class="btn btn-outline-success my-2" data-bs-toggle="modal"
+                      data-bs-target="#addAppointmentModal" (click)="edit(i)">
+                New appointment
+              </button>
             </div>
-        </div>
-    </div>
-
-    <!-- Edit modal-->
-    <div class="modal fade bg-dark" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        Edit Patient
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Name
-                        </label>
-                        <input [(ngModel)]="patientToEdit.name" type="text" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Lastname
-                        </label>
-                        <input [(ngModel)]="patientToEdit.lastname" type="text" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Date of birth
-                        </label>
-                        <input [(ngModel)]="patientToEdit.dateOfBirth" type="datetime-local" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Address
-                        </label>
-                        <input [(ngModel)]="patientToEdit.address" type="text" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Profile picture
-                        </label>
-                        <input [(ngModel)]="patientToEdit.profilePicture" type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger border-dark text-dark" data-bs-dismiss="modal">
-                        Cancel
-                    </button>
-                    <button type="button" (click)="update()" class="btn btn-outline-success border-dark text-dark"
-                        data-bs-dismiss="modal">
-                        Save
-                    </button>
-                </div>
+          </div>
+          <ng-template ngFor let-appointment [ngForOf]="patient.appointments" let-i="index">
+            <div class="container border-top border-dark border-3">
+              <div class="row justify-content-end">
+                Date: {{appointment.date | date:'medium'}}
+              </div>
+              <div class="row">
+                {{appointment.description}}
+              </div>
+              <div class="row justify-content-end">
+                Doctor: {{getDoctorName(appointment.doctorId)}}
+              </div>
             </div>
-        </div>
-    </div>
+          </ng-template>
+        </td>
+      </tr>
+    </ng-template>
+    </tbody>
+  </table>
 
-    <!-- Add appointment modal-->
-    <div class="modal fade bg-dark" id="addAppointmentModal" data-bs-backdrop="static" data-bs-keyboard="false"
-        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        Add new appoinment
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Patient
-                        </label>
-                        <fieldset disabled>
-                            <input type="text" class="form-control" id="disabledTextInput"
-                                value="{{patientToEdit.name}} {{patientToEdit.lastname}}">
-                        </fieldset>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Date
-                        </label>
-                        <input [(ngModel)]="newAppointment.date" type="datetime-local" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-floating">
-                            <textarea [(ngModel)]="newAppointment.description" class="form-control"></textarea>
-                            <label for="floatingTextarea">Description</label>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Doctor
-                        </label>
-                        <select [(ngModel)]="newAppointment.doctorId" class="form-select">
-                            <option disabled>Select a doctor</option>
-                            <option *ngFor="let doctor of doctors" [ngValue]="doctor.id">
-                                {{doctor.name}} {{doctor.lastname}}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger border-dark text-dark" data-bs-dismiss="modal">
-                        Cancel
-                    </button>
-                    <button type="button" (click)="createAppointment()"
-                        class="btn btn-outline-success border-dark text-dark" data-bs-dismiss="modal">
-                        Save
-                    </button>
-                </div>
-            </div>
+  <!-- Create modal-->
+  <div class="modal fade bg-dark" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+       aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            Create new Patient
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          </button>
         </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">
+              Name
+            </label>
+            <input [(ngModel)]="newPatient.name" type="text" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">
+              Lastname
+            </label>
+            <input [(ngModel)]="newPatient.lastname" type="text" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">
+              Date of birth
+            </label>
+            <input [(ngModel)]="newPatient.dateOfBirth" type="datetime-local" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">
+              Address
+            </label>
+            <input [(ngModel)]="newPatient.address" type="text" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">
+              Profile picture
+            </label>
+            <input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-danger border-dark text-dark" data-bs-dismiss="modal">
+            Cancel
+          </button>
+          <button type="button" (click)="create()" class="btn btn-outline-success border-dark text-dark"
+                  data-bs-dismiss="modal">
+            Save
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <!-- Edit modal-->
+  <div class="modal fade bg-dark" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+       aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            Edit Patient
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">
+              Name
+            </label>
+            <input [(ngModel)]="patientToEdit.name" type="text" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">
+              Lastname
+            </label>
+            <input [(ngModel)]="patientToEdit.lastname" type="text" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">
+              Date of birth
+            </label>
+            <input [(ngModel)]="patientToEdit.dateOfBirth" type="datetime-local" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">
+              Address
+            </label>
+            <input [(ngModel)]="patientToEdit.address" type="text" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">
+              Profile picture
+            </label>
+            <input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-danger border-dark text-dark" data-bs-dismiss="modal">
+            Cancel
+          </button>
+          <button type="button" (click)="update()" class="btn btn-outline-success border-dark text-dark"
+                  data-bs-dismiss="modal">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add appointment modal-->
+  <div class="modal fade bg-dark" id="addAppointmentModal" data-bs-backdrop="static" data-bs-keyboard="false"
+       tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            Add new appoinment
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">
+              Patient
+            </label>
+            <fieldset disabled>
+              <input type="text" class="form-control" id="disabledTextInput"
+                     value="{{patientToEdit.name}} {{patientToEdit.lastname}}">
+            </fieldset>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">
+              Date
+            </label>
+            <input [(ngModel)]="newAppointment.date" type="datetime-local" class="form-control">
+          </div>
+          <div class="mb-3">
+            <div class="form-floating">
+              <textarea [(ngModel)]="newAppointment.description" class="form-control"></textarea>
+              <label for="floatingTextarea">Description</label>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">
+              Doctor
+            </label>
+            <select [(ngModel)]="newAppointment.doctorId" class="form-select">
+              <option disabled>Select a doctor</option>
+              <option *ngFor="let doctor of doctors" [ngValue]="doctor.id">
+                {{doctor.name}} {{doctor.lastname}}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-danger border-dark text-dark" data-bs-dismiss="modal">
+            Cancel
+          </button>
+          <button type="button" (click)="createAppointment()"
+                  class="btn btn-outline-success border-dark text-dark" data-bs-dismiss="modal">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

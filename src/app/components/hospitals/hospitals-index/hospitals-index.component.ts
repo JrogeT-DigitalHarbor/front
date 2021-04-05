@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { Hospital } from 'src/app/models/hospital.model';
-import { HospitalService } from 'src/app/services/hospitals/hospital.service';
-import { Utils } from 'src/app/Utils';
+import {Component, OnInit} from '@angular/core';
+import {Hospital} from 'src/app/models/hospital.model';
+import {HospitalService} from 'src/app/services/hospitals/hospital.service';
 
 @Component({
   selector: 'app-hospitals-index',
@@ -40,7 +39,7 @@ export class HospitalsIndexComponent implements OnInit {
     );
   }
 
-  create() {
+  create(): void {
     this.hospitalService.create(this.newHospital).subscribe(
       (Response) => {
         this.newHospital = new Hospital('', '');
@@ -54,7 +53,7 @@ export class HospitalsIndexComponent implements OnInit {
     this.hospitalToEdit = this.hospitals[i];
   }
 
-  update() {
+  update(): void {
     this.hospitalService.update(this.hospitalToEdit.id, this.hospitalToEdit).subscribe(
       (Response) => {
         this.getHospitals();
@@ -80,6 +79,7 @@ export class HospitalsIndexComponent implements OnInit {
       );
     }
   }
+
   searchByDate(): void {
     if (this.dateA.length > 0 && this.dateB.length > 0) {
       this.hospitalService.searchByDate(this.dateA + ':00.000Z', this.dateB + ':00.000Z').subscribe(

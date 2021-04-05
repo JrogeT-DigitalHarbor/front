@@ -1,19 +1,19 @@
-import { Component } from '@angular/core';
-import { DoctorDTO } from 'src/app/models/doctor-dto.model';
-import { Doctor } from 'src/app/models/doctor.model';
-import { Hospital } from 'src/app/models/hospital.model';
-import { Specialty } from 'src/app/models/specialty.model';
-import { DoctorService } from 'src/app/services/doctors/doctor.service';
-import { HospitalService } from 'src/app/services/hospitals/hospital.service';
-import { SpecialtyService } from 'src/app/services/specialties/specialty.service';
-import { Utils } from 'src/app/Utils';
+import {Component, OnInit} from '@angular/core';
+import {DoctorDTO} from 'src/app/models/doctor-dto.model';
+import {Doctor} from 'src/app/models/doctor.model';
+import {Hospital} from 'src/app/models/hospital.model';
+import {Specialty} from 'src/app/models/specialty.model';
+import {DoctorService} from 'src/app/services/doctors/doctor.service';
+import {HospitalService} from 'src/app/services/hospitals/hospital.service';
+import {SpecialtyService} from 'src/app/services/specialties/specialty.service';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-doctors-index',
   templateUrl: './doctors-index.component.html',
   styleUrls: ['./doctors-index.component.css']
 })
-export class DoctorsIndexComponent {
+export class DoctorsIndexComponent implements OnInit {
 
   public doctors: Array<DoctorDTO>;
   public newDoctor: Doctor;
@@ -25,15 +25,18 @@ export class DoctorsIndexComponent {
   public doctorLastname: string;
   public dateA: string;
   public dateB: string;
+  public fileToUpload: any;
+  private fileName: string;
 
   constructor(
     private doctorService: DoctorService,
     private specialtyService: SpecialtyService,
     private hospitalService: HospitalService,
+    private http: HttpClient
   ) {
     this.doctors = [];
-    this.newDoctor = new Doctor('', '', '', '', '', '', [], '', []);
-    this.doctorToEdit = new Doctor('', '', '', '', '', '', [], '', []);
+    this.newDoctor = new Doctor('', '', '', '', '', [], '', [], '');
+    this.doctorToEdit = new Doctor('', '', '', '', '', [], '', [], '');
     this.specialties = [];
     this.selectedSpecialty = new Specialty('', '', '', '');
     this.hospitals = [];
@@ -41,6 +44,7 @@ export class DoctorsIndexComponent {
     this.doctorLastname = '';
     this.dateA = '';
     this.dateB = '';
+    this.fileName = '';
   }
 
   ngOnInit(): void {
@@ -85,34 +89,41 @@ export class DoctorsIndexComponent {
     );
   }
 
-  create() {
+  create(): void {
     let y: string = this.newDoctor.dateOfBirth.toString();
     y += ':00.000Z';
     this.newDoctor.dateOfBirth = y;
+    delete this.newDoctor.id;
+    this.newDoctor.profilePicture = 'id';
     this.doctorService.create(this.newDoctor).subscribe(
       (Response) => {
-        this.newDoctor = new Doctor('', '', '', '', '', '', [], '', []);
-        this.getDoctors();
+        this.fileName = Response.body.id;
+        this.newDoctor = new Doctor('', '', '', '', '', [], '', [], '');
+        this.uploadFile();
         alert(Response.message);
       }
     );
   }
 
-  addSpecialtyToNewDoctor() {
+  addSpecialtyToNewDoctor(): void {
     if (
-      this.newDoctor.specialtiesIds.indexOf(this.selectedSpecialty.id) == -1
+      // tslint:disable-next-line:no-non-null-assertion
+      this.newDoctor.specialtiesIds.indexOf(this.selectedSpecialty.id!) === -1
       && this.selectedSpecialty.id !== ''
     ) {
-      this.newDoctor.specialtiesIds.push(this.selectedSpecialty.id);
+      // tslint:disable-next-line:no-non-null-assertion
+      this.newDoctor.specialtiesIds.push(this.selectedSpecialty.id!);
     }
   }
 
-  addSpecialtyToDoctorToEdit() {
+  addSpecialtyToDoctorToEdit(): void {
     if (
-      this.doctorToEdit.specialtiesIds.indexOf(this.selectedSpecialty.id) == -1
+      // tslint:disable-next-line:no-non-null-assertion
+      this.doctorToEdit.specialtiesIds.indexOf(this.selectedSpecialty.id!) === -1
       && this.selectedSpecialty.id !== ''
     ) {
-      this.doctorToEdit.specialtiesIds.push(this.selectedSpecialty.id);
+      // tslint:disable-next-line:no-non-null-assertion
+      this.doctorToEdit.specialtiesIds.push(this.selectedSpecialty.id!);
     }
   }
 
@@ -120,15 +131,17 @@ export class DoctorsIndexComponent {
     this.doctorToEdit = this.doctors[i];
   }
 
-  update() {
+  update(): void {
     let y: string = this.doctorToEdit.dateOfBirth.toString();
-    if (y.indexOf('Z') == -1) {
+    if (y.indexOf('Z') === -1) {
       y += ':00.000Z';
     }
     this.doctorToEdit.dateOfBirth = y;
-    this.doctorService.update(this.doctorToEdit.id, this.doctorToEdit).subscribe(
+    // tslint:disable-next-line:no-non-null-assertion
+    this.doctorService.update(this.doctorToEdit.id!, this.doctorToEdit).subscribe(
       (Response) => {
-        this.getDoctors();
+        this.fileName = Response.body.id;
+        this.uploadFile();
         alert(Response.message);
       },
       (Error) => {
@@ -145,7 +158,7 @@ export class DoctorsIndexComponent {
     );
   }
 
-  getSpecialtyName(specialtyId: string) {
+  getSpecialtyName(specialtyId: string): string {
     let name = 'unknowed';
     this.specialties.forEach((specialty: Specialty) => {
       if (specialty.id === specialtyId) {
@@ -155,7 +168,7 @@ export class DoctorsIndexComponent {
     return name;
   }
 
-  getHospitalName(hospitalId: string) {
+  getHospitalName(hospitalId: string): string {
     let name = 'unknowed';
     this.hospitals.forEach((hospital: Hospital) => {
       if (hospital.id === hospitalId) {
@@ -192,6 +205,30 @@ export class DoctorsIndexComponent {
           this.doctors = Response.body;
         }
       );
+    }
+  }
+
+  onFileSelected(event: any): void {
+    this.fileToUpload = event.target.files[0];
+  }
+
+  uploadFile(): void {
+    if (this.fileToUpload) {
+      const formData = new FormData();
+      formData.append('file', this.fileToUpload);
+      this.http.post(
+        'http://localhost:8080/api/uploadFile/' + this.fileName,
+        formData
+      ).subscribe(
+        (Response: any) => {
+          this.fileToUpload = null;
+          this.getDoctors();
+        },
+        (Error: any) => {
+        }
+      );
+    } else {
+      this.getDoctors();
     }
   }
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, DoCheck, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Utils} from '../../Utils';
 
@@ -7,7 +7,7 @@ import {Utils} from '../../Utils';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
+export class NavbarComponent implements DoCheck {
 
   public username: string;
   public logged: boolean;
@@ -17,7 +17,6 @@ export class NavbarComponent {
     this.logged = this.username !== '';
   }
 
-  // tslint:disable-next-line:use-lifecycle-interface
   ngDoCheck(): void {
     this.username = Utils.get('username');
     this.logged = this.username !== '';

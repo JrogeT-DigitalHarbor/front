@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'app-main-list',
@@ -7,5 +7,5 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class MainListComponent {
 
-  @Input() active: string = "";
+  @Input() active = '';
 }

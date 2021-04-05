@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { RequestService } from '../request.service';
-import { Patient } from 'src/app/models/patient.model';
-import { Utils } from 'src/app/Utils';
-import { Appointment } from 'src/app/models/appointment.model';
+/* tslint:disable:object-literal-shorthand */
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {RequestService} from '../request.service';
+import {Patient} from 'src/app/models/patient.model';
+import {Utils} from 'src/app/Utils';
+import {Appointment} from 'src/app/models/appointment.model';
 
 @Injectable({
   providedIn: 'root',
@@ -36,7 +37,7 @@ export class PatientService {
     const data = {
       userId: Utils.get('id'),
       body: patient
-    }
+    };
     return this.requestService.put('patients/' + patientId, data);
   }
 
@@ -53,14 +54,14 @@ export class PatientService {
   }
 
   searchByName(name: string): Observable<any> {
-    return this.requestService.post('patients/search/name', { word: name });
+    return this.requestService.post('patients/search/name', {word: name});
   }
 
   searchByLastname(lastname: string): Observable<any> {
-    return this.requestService.post('patients/search/lastname', { word: lastname });
+    return this.requestService.post('patients/search/lastname', {word: lastname});
   }
 
   searchByDate(dateA: string, dateB: string): Observable<any> {
-    return this.requestService.post('patients/search/dates', { dateA: dateA, dateB: dateB });
+    return this.requestService.post('patients/search/dates', {dateA: dateA, dateB: dateB});
   }
 }

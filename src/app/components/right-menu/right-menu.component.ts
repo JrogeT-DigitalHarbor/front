@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'app-right-menu',
@@ -7,6 +7,6 @@ import { Component, Input } from '@angular/core';
 })
 export class RightMenuComponent {
 
-  @Input() active: string = "";
+  @Input() active = '';
 
 }
