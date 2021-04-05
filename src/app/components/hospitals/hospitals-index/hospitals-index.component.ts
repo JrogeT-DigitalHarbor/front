@@ -13,11 +13,17 @@ export class HospitalsIndexComponent implements OnInit {
   public hospitals: Array<Hospital>;
   public newHospital: Hospital;
   public hospitalToEdit: Hospital;
+  public hospitalName: string;
+  public dateA: string;
+  public dateB: string;
 
   constructor(private hospitalService: HospitalService) {
     this.hospitals = [];
     this.newHospital = new Hospital('', '');
     this.hospitalToEdit = new Hospital('', '');
+    this.hospitalName = '';
+    this.dateA = '';
+    this.dateB = '';
   }
 
   ngOnInit(): void {
@@ -65,5 +71,24 @@ export class HospitalsIndexComponent implements OnInit {
         this.getHospitals();
       }
     );
+  }
+
+  searchByName(): void {
+    if (this.hospitalName.length > 0) {
+      this.hospitalService.searchByName(this.hospitalName).subscribe(
+        (Response) => {
+          this.hospitals = Response.body;
+        }
+      );
+    }
+  }
+  searchByDate(): void {
+    if (this.dateA.length > 0 && this.dateB.length > 0) {
+      this.hospitalService.searchByDate(this.dateA + ':00.000Z', this.dateB + ':00.000Z').subscribe(
+        (Response) => {
+          this.hospitals = Response.body;
+        }
+      );
+    }
   }
 }

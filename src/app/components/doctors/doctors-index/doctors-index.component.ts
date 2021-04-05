@@ -20,7 +20,10 @@ export class DoctorsIndexComponent {
   public doctorToEdit: Doctor;
   public specialties: Array<Specialty>;
   public selectedSpecialty: Specialty;
-  public hospitals: Array<Hospital>
+  public hospitals: Array<Hospital>;
+  public hospitalName: string;
+  public dateA: string;
+  public dateB: string;
 
   constructor(
     private doctorService: DoctorService,
@@ -33,6 +36,9 @@ export class DoctorsIndexComponent {
     this.specialties = [];
     this.selectedSpecialty = new Specialty('', '', '', '');
     this.hospitals = [];
+    this.hospitalName = '';
+    this.dateA = '';
+    this.dateB = '';
   }
 
   ngOnInit(): void {
@@ -158,5 +164,24 @@ export class DoctorsIndexComponent {
       }
     });
     return name;
+  }
+
+  searchByName(): void {
+    if (this.hospitalName.length > 0) {
+      this.doctorService.searchByName(this.hospitalName).subscribe(
+        (Response) => {
+          this.doctors = Response.body;
+        }
+      );
+    }
+  }
+  searchByDate(): void {
+    if (this.dateA.length > 0 && this.dateB.length > 0) {
+      this.doctorService.searchByDate(this.dateA + ':00.000Z', this.dateB + ':00.000Z').subscribe(
+        (Response) => {
+          this.doctors = Response.body;
+        }
+      );
+    }
   }
 }

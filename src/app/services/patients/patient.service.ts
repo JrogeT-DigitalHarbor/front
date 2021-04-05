@@ -40,7 +40,7 @@ export class PatientService {
     Utils.log(data);
     return this.requestService.put('patients/' + patientId, data);
   }
-  
+
   createAppointment(patientId: string, appointment: Appointment): Observable<any> {
     const data = {
       userId: Utils.get('id'),
@@ -52,5 +52,13 @@ export class PatientService {
 
   delete(patientId: string): Observable<any> {
     return this.requestService.delete('patients/' + patientId);
+  }
+
+  searchByName(name: string): Observable<any> {
+    return this.requestService.post('patients/search/name', { word: name });
+  }
+
+  searchByDate(dateA: string, dateB: string): Observable<any> {
+    return this.requestService.post('patients/search/dates', { dateA: dateA, dateB: dateB });
   }
 }

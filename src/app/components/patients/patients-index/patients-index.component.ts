@@ -19,6 +19,9 @@ export class PatientsIndexComponent {
   public doctors: Array<Doctor>;
   public selectedoctor: Doctor;
   public newAppointment: Appointment;
+  public hospitalName: string;
+  public dateA: string;
+  public dateB: string;
 
   constructor(
     private patientService: PatientService,
@@ -30,6 +33,9 @@ export class PatientsIndexComponent {
     this.doctors = [];
     this.selectedoctor = new Doctor('', '', '', '', '', '', [], '');
     this.newAppointment = new Appointment('', '', '');
+    this.hospitalName = '';
+    this.dateA = '';
+    this.dateB = '';
   }
 
   ngOnInit(): void {
@@ -124,6 +130,25 @@ export class PatientsIndexComponent {
       }
     });
     return name;
+  }
+
+  searchByName(): void {
+    if (this.hospitalName.length > 0) {
+      this.patientService.searchByName(this.hospitalName).subscribe(
+        (Response) => {
+          this.patients = Response.body;
+        }
+      );
+    }
+  }
+  searchByDate(): void {
+    if (this.dateA.length > 0 && this.dateB.length > 0) {
+      this.patientService.searchByDate(this.dateA + ':00.000Z', this.dateB + ':00.000Z').subscribe(
+        (Response) => {
+          this.patients = Response.body;
+        }
+      );
+    }
   }
 
 }

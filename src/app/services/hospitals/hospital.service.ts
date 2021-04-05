@@ -43,4 +43,12 @@ export class HospitalService {
   delete(hospitalId: string): Observable<any> {
     return this.requestService.delete('hospitals/' + hospitalId);
   }
+
+  searchByName(name: string): Observable<any> {
+    return this.requestService.post('hospitals/search/name', { word: name });
+  }
+
+  searchByDate(dateA: string, dateB: string): Observable<any> {
+    return this.requestService.post('hospitals/search/dates', { dateA: dateA, dateB: dateB });
+  }
 }

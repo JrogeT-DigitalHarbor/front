@@ -1,7 +1,29 @@
+<div class="row">
+    <div class="col-5 mx-auto">
+        <div class="input-group mb-3">
+            <input [(ngModel)]="hospitalName" type="text" class="form-control" placeholder="name...">
+            <button class="btn btn-outline-info" type="button" (click)="searchByName()">
+                Search by name
+            </button>
+        </div>
+    </div>
+    <div class="col mx-auto">
+        <div class="input-group mb-3">
+            <input [(ngModel)]="dateA" type="datetime-local" class="form-control">
+            <input [(ngModel)]="dateB" type="datetime-local" class="form-control">
+            <button class=" btn btn-outline-info" type="button" (click)="searchByDate()">
+                Search by date
+            </button>
+        </div>
+    </div>
+</div>
 <table class="table table-secondary table-bordered border-dark table-sm">
     <thead class="table-dark">
         <tr>
             <th scope="col">
+                <button class="btn btn-outline-success btn-sm" (click)="getPatients()">
+                    Refresh
+                </button>
                 <button type="button" class="btn btn-sm btn-outline-success border-light text-white"
                     data-bs-toggle="modal" data-bs-target="#createModal">
                     Create

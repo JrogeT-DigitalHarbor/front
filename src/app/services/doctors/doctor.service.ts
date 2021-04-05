@@ -43,4 +43,12 @@ export class DoctorService {
   delete(doctorId: string): Observable<any> {
     return this.requestService.delete('doctors/' + doctorId);
   }
+
+  searchByName(name: string): Observable<any> {
+    return this.requestService.post('doctors/search/name', { word: name });
+  }
+
+  searchByDate(dateA: string, dateB: string): Observable<any> {
+    return this.requestService.post('doctors/search/dates', { dateA: dateA, dateB: dateB });
+  }
 }
